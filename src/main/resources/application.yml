@@ -6,6 +6,11 @@ spring:
     mongodb:
       host: localhost
       port: 27017
+      authentication-database: admin
       database: hug
       username : howoo
       password :
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
