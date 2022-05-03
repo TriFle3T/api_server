@@ -1,7 +1,7 @@
 package com.hug.hug_api.global.jwt;
 
-import com.hug.hug_api.domain.user.User;
-import com.hug.hug_api.domain.user.UserService;
+import com.hug.hug_api.domain.user.domain.User;
+import com.hug.hug_api.domain.user.service.UserService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

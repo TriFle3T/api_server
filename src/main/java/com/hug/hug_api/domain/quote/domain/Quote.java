@@ -1,4 +1,4 @@
-package com.hug.hug_api.domain.quote;
+package com.hug.hug_api.domain.quote.domain;
 
 import lombok.Builder;
 import lombok.Data;

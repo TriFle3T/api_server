@@ -1,6 +1,6 @@
 package com.hug.hug_api.global.config;
 
-import com.hug.hug_api.domain.user.UserService;
+import com.hug.hug_api.domain.user.service.UserService;
 import com.hug.hug_api.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,9 +18,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final RedisTemplate<String,String> redisTemplate;
 
 
-    JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(userService,redisTemplate);
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(userService,redisTemplate);
 
         http.
                 csrf().disable()
