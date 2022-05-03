@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class UserController {
+public class UserApiController {
 
     private final UserService userService;
 
@@ -20,7 +20,7 @@ public class UserController {
         return userService.signUp(signUpDto);
     }
 
-
+    
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto signInDto){
         return userService.signIn(signInDto);
