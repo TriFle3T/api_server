@@ -1,4 +1,4 @@
-package com.hug.hug_api.domain.user;
+package com.hug.hug_api.domain.user.domain;
 
 import com.hug.hug_api.domain.diary.Diary;
 import com.hug.hug_api.domain.result.MainScreenResult;
