@@ -1,6 +1,7 @@
 package com.hug.hug_api.global.exception;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -23,7 +24,11 @@ public enum ErrorCode {
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
+
+    /* 500 INTERNAL_SERVER_ERROR : 서버 내부 오류, 처리하지 못 한 예외 발생 */
+    SERVER_ERROR(INTERNAL_SERVER_ERROR,"서버 내부 오류")
     ;
+
 
     private final HttpStatus httpStatus;
     private final String detail;
