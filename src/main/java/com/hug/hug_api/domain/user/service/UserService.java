@@ -56,8 +56,6 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
 
-        if(true) throw new RuntimeException();
-
         return customResponse.success("회원가입 성공",HttpStatus.CREATED);
     }
 }
