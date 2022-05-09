@@ -2,6 +2,7 @@ package com.hug.hug_api.domain.user.api;
 
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.dto.SignUpDto;
+import com.hug.hug_api.domain.user.dto.UserDto;
 import com.hug.hug_api.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class UserApiController {
+public class UserController {
 
     private final UserService userService;
 
@@ -26,6 +27,10 @@ public class UserApiController {
         return userService.signIn(signInDto);
     }
 
+    @PutMapping("/user/nickname")
+    public ResponseEntity<?> changeNickName(@RequestBody UserDto userDto){
+        return userService.changeNickName(userDto);
+    }
 
 
 }
