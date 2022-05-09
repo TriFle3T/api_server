@@ -1,12 +1,19 @@
-package com.hug.hug_api.domain.diary;
+package com.hug.hug_api.domain.diary.dto;
 
 import com.hug.hug_api.domain.result.TestResult;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Diary {
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class DiaryDto {
 
     private int index;
     private String title;
