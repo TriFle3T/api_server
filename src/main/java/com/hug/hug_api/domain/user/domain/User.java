@@ -1,6 +1,6 @@
 package com.hug.hug_api.domain.user.domain;
 
-import com.hug.hug_api.domain.diary.Diary;
+import com.hug.hug_api.domain.diary.dto.DiaryDto;
 import com.hug.hug_api.domain.result.MainScreenResult;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +28,7 @@ public class User implements UserDetails {
     private String nickname;
     private String password;
 
-    private List<Diary> diaries;
+    private List<DiaryDto> diaries;
 
     private List<MainScreenResult> result;
 
