@@ -3,8 +3,6 @@ package com.hug.hug_api.global.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hug.hug_api.domain.user.dao.UserRepository;
 import com.hug.hug_api.domain.user.domain.User;
-import com.hug.hug_api.domain.user.dto.SignInResponseDto;
-import com.hug.hug_api.domain.user.dto.UserDto;
 import com.hug.hug_api.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

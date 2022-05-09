@@ -91,4 +91,18 @@ public class UserService implements UserDetailsService {
 
         return customResponse.success(responseDto,"로그인 성공");
     }
+
+    public ResponseEntity<?> changeNickName(UserDto userDto) {
+        String email = userDto.getEmail();
+        var optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isEmpty()){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        var user = optionalUser.get();
+
+        user.setNickname(userDto.getNickname());
+        userRepository.save(user);
+
+        return customResponse.success(userDto,"닉네임 변경 성공");
+    }
 }
