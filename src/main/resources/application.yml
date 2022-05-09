@@ -9,8 +9,17 @@ spring:
       authentication-database: admin
       database: hug
       username : howoo
-      password :
+      password : howoo
 
   redis:
     host: 127.0.0.1
     port: 6379
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret: 
+
