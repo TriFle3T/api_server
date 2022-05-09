@@ -34,10 +34,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if(token != null){
             var result = JwtTokenProvider.verify(token);
             if(result.isSuccess()) {
-                String isLogin = redisTemplate.opsForValue().get(token);
-                // 이미 로그인 되어 있는지 검사
-
-                if (ObjectUtils.isEmpty(isLogin)) {
+                String isLogout = redisTemplate.opsForValue().get(token);
+                // 로그아웃 되어 있는지 검사
+                if (ObjectUtils.isEmpty(isLogout)) {
                     var user = (User) userService.loadUserByUsername(result.getEmail());
 
                     var usernamePasswordToken = new UsernamePasswordAuthenticationToken(
