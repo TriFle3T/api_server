@@ -20,6 +20,6 @@ spring:
       client:
         registration:
           google:
-            client-id: test
-            client-secret: test
+            client-id: 
+            client-secret:
 
