@@ -29,14 +29,15 @@ public class UserController {
         return userService.signIn(signInDto);
     }
 
-    @PutMapping("/user/nickname")
-    public ResponseEntity<?> changeNickName(@RequestBody UserDto userDto){
-        return userService.changeNickName(userDto);
-    }
 
     @PostMapping("/user/diary")
     public ResponseEntity<?> analyzeDiary(@RequestBody DiaryDto diaryDto){
         return diaryService.analyzeDiary(diaryDto);
+    }
+
+    @DeleteMapping("/user/diary/{index}")
+    public ResponseEntity<?> deleteDiary(@PathVariable(name = "index") int index){
+        return diaryService.deleteDiary(index);
     }
 
 }
