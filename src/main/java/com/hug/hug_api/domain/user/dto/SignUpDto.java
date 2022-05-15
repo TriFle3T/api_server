@@ -1,8 +1,5 @@
 package com.hug.hug_api.domain.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 
@@ -10,7 +7,7 @@ import lombok.Getter;
 public class SignUpDto {
 
     private String email;
-    private String nickname;
+    private String name;
     private String password;
 
 }

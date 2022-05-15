@@ -46,7 +46,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
             var authorities = new HashSet<GrantedAuthority>();
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             user = User.builder()
-                    .nickname(name)
+                    .name(name)
                     .email(email)
                     .diaries(null)
                     .enabled(true)
