@@ -21,7 +21,6 @@ public class DiaryDto {
     private List<TestResult> result;
     private int emoji;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    private String createdAt;
 
 }
