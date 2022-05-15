@@ -25,7 +25,9 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String email;
 
-    private String nickname;
+    private int counter = 0;
+
+    private String name;
     private String password;
 
     private List<DiaryDto> diaries;

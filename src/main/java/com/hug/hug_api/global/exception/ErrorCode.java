@@ -29,8 +29,11 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 내부 오류, 처리하지 못 한 예외 발생 */
-    SERVER_ERROR(INTERNAL_SERVER_ERROR,"서버 내부 오류")
+    SERVER_ERROR(INTERNAL_SERVER_ERROR,"서버 내부 오류"),
+
+    ML_SERVER_ERROR(INTERNAL_SERVER_ERROR,"ML 서버 오류")
     ;
+
 
 
     private final HttpStatus httpStatus;
