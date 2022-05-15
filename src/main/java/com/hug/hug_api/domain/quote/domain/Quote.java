@@ -1,5 +1,6 @@
 package com.hug.hug_api.domain.quote.domain;
 
+import com.hug.hug_api.domain.quote.dto.SingleQuoteDto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -15,6 +16,6 @@ public class Quote {
     private String id;
     private int index;
     private String theme;
-    private List<String> quotes;
+    private List<SingleQuoteDto> quotes;
 
 }
