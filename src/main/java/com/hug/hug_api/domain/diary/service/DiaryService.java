@@ -1,6 +1,7 @@
 package com.hug.hug_api.domain.diary.service;
 
 import com.hug.hug_api.domain.diary.dto.DiaryDto;
+import com.hug.hug_api.domain.quote.dao.QuoteRepository;
 import com.hug.hug_api.domain.result.TestResult;
 import com.hug.hug_api.domain.user.dao.UserRepository;
 import com.hug.hug_api.global.common.CustomResponse;
@@ -18,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,6 +31,8 @@ public class DiaryService {
 
     private final UserRepository userRepository;
     private final CustomResponse customResponse;
+    private final QuoteRepository quoteRepository;
+
 
     public ResponseEntity<?> analyzeDiary(DiaryDto diaryDto) {
 
@@ -65,10 +67,22 @@ public class DiaryService {
         TestResult result = responseEntity.getBody();
         if(result == null) throw new CustomException(ErrorCode.ML_SERVER_ERROR);
 
+        var quotes = quoteRepository.findByIndex(result.getIndex());
+        int size = quotes.getQuotes().size();
+        int randomIndex = (int)(Math.random()* size);
+
+        var quote = quotes.getQuotes().get(
+            randomIndex
+        );
+
+        result.setContent(quote.getContent());
+        result.setSpeaker(quote.getSpeaker());
+
+
         if(diaryDto.getResult()==null) diaryDto.setResult(List.of(result));
         else diaryDto.getResult().add(result);
 
-        diaryDto.setEmoji(result.getEmoji());
+        diaryDto.setEmoji(result.getIndex());
 
         int idx = user.getCounter()+1;
         diaryDto.setIndex(idx);
@@ -76,12 +90,16 @@ public class DiaryService {
 
         diaryDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
+
+
         if(user.getDiaries() == null) user.setDiaries(List.of(diaryDto));
         else user.getDiaries().add(diaryDto);
 
+
         userRepository.save(user);
 
-        return customResponse.success(diaryDto,"분석 성공");
+
+        return customResponse.success(result,"분석 성공");
 
     }
 

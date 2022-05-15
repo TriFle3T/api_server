@@ -17,5 +17,7 @@ public class TestResult {
     private Float disgust;
     private Float fear;
     private Float sad;
-    private int emoji;
+    private int index;
+    private String content;
+    private String speaker;
 }

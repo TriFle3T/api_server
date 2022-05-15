@@ -2,6 +2,7 @@ package com.hug.hug_api.domain.user.api;
 
 import com.hug.hug_api.domain.diary.dto.DiaryDto;
 import com.hug.hug_api.domain.diary.service.DiaryService;
+import com.hug.hug_api.domain.quote.service.QuoteService;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.dto.SignUpDto;
 import com.hug.hug_api.domain.user.dto.UserDto;
@@ -17,6 +18,7 @@ public class UserController {
 
     private final UserService userService;
     private final DiaryService diaryService;
+    private final QuoteService quoteService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto){
@@ -40,4 +42,10 @@ public class UserController {
         return diaryService.deleteDiary(index);
     }
 
+
+    @GetMapping("/insert")
+    public String insertDB(){
+        quoteService.insertFile();
+        return "Done";
+    }
 }
