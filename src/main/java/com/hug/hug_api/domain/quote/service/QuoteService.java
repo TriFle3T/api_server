@@ -8,9 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class QuoteService {
     public void insertFile(){
         ClassPathResource resource = new ClassPathResource("quote_DB");
 
-
         List<Quote> quotes = new ArrayList<>();
 
         for(int i =0;i<5;i++){
@@ -40,10 +40,19 @@ public class QuoteService {
             );
         }
 
-
         try {
-            Path path = Paths.get(resource.getURI());
-            List<String> content = Files.readAllLines(path);
+
+            InputStream is = new BufferedInputStream(resource.getInputStream());
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is)
+            );
+
+            List<String> content = new ArrayList<>();
+            String line;
+            while((line = reader.readLine()) != null){
+                content.add(line);
+            }
             content.forEach(
                     q->{
                         var items = q.split("\t");
@@ -59,7 +68,7 @@ public class QuoteService {
             quoteRepository.saveAll(quotes);
 
         } catch (Exception e) {
-            log.error("error!!!!");
+            log.error("격언 DB migrate하는 과정 주 알 수 없는 exception 발생!!!!");
         }
     }
 
