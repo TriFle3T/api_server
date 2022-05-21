@@ -17,6 +17,8 @@ public class TestResult {
     private Float disgust;
     private Float fear;
     private Float sad;
+    private Float neutral;
+    private Float surprise;
     private int index;
     private String content;
     private String speaker;
