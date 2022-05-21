@@ -1,11 +1,11 @@
 package com.hug.hug_api.domain.user.service;
 
+import com.hug.hug_api.domain.diary.dto.DiaryDto;
+import com.hug.hug_api.domain.result.MainScreenResult;
 import com.hug.hug_api.domain.user.dao.UserRepository;
 import com.hug.hug_api.domain.user.domain.User;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.dto.SignInResponseDto;
-import com.hug.hug_api.domain.user.dto.SignUpDto;
-import com.hug.hug_api.domain.user.dto.UserDto;
 import com.hug.hug_api.global.common.CustomResponse;
 import com.hug.hug_api.global.exception.CustomException;
 import com.hug.hug_api.global.exception.ErrorCode;
@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
@@ -44,40 +45,31 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(()->new UsernameNotFoundException(email));
-    }
-    
-    public ResponseEntity<?> signUp(SignUpDto signUpDto) {
-
-        // 해당 이메일로 가입된 계정이 있는 경우
-        if(userRepository.existsByEmail(signUpDto.getEmail())) throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
-
-        var authorities = new HashSet<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        var user = User.builder()
-                .name(signUpDto.getName())
-                .email(signUpDto.getEmail())
-                .password(passwordEncoder.encode(signUpDto.getPassword()))
-                .diaries(null)
-                .enabled(true)
-                .authorities(authorities)
-                .result(null)
-                .build();
-
-        userRepository.save(user);
-
-        return customResponse.success("회원가입 성공",HttpStatus.CREATED);
+                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     public ResponseEntity<?> signIn(SignInRequestDto signInDto) {
 
-        var authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.getEmail(),signInDto.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        var user = (User)authentication.getPrincipal();
+
+        if(!userRepository.existsByEmail(signInDto.getEmail())) {
+            var authorities = new HashSet<GrantedAuthority>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            var newUser = User.builder()
+                    .name(signInDto.getName())
+                    .email(signInDto.getEmail())
+                    .diaries(new ArrayList<>())
+                    .enabled(true)
+                    .authorities(authorities)
+                    .result(new ArrayList<>())
+                    .build();
+            userRepository.save(newUser);
+        }
+
+        var user = userRepository.findByEmail(signInDto.getEmail()).get();
+
         var token = JwtTokenProvider.generateToken(user);
-
 
         var responseDto = SignInResponseDto.builder()
                 .name(user.getName())
