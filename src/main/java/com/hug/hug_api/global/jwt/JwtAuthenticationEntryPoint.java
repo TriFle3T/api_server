@@ -24,7 +24,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException{
 //        throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
 
-
             response.setContentType("application/json;charset=utf-8");
             var map = new HashMap<String,Object>();
 

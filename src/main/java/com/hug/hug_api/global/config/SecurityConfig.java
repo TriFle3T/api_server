@@ -1,6 +1,7 @@
 package com.hug.hug_api.global.config;
 
 import com.hug.hug_api.domain.user.service.UserService;
+import com.hug.hug_api.global.jwt.JwtAuthenticationEntryPoint;
 import com.hug.hug_api.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,9 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
     private final RedisTemplate<String,String> redisTemplate;
-    private final CustomOauth2UserService oauth2UserService;
-    private final Oauth2SuccessHandler successHandler;
-
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 
     @Override
@@ -35,11 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**").hasRole("USER")
                 .anyRequest().permitAll()
-
                 .and()
-                    .oauth2Login()
-                        .successHandler(successHandler)
-                        .userInfoEndpoint().userService(oauth2UserService)
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 ;
     }
 }
