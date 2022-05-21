@@ -4,22 +4,21 @@ server:
 spring:
   data:
     mongodb:
-      host: localhost
+#      host: mongo
+      host: 127.0.0.1
       port: 27017
       authentication-database: admin
       database: hug
       username : howoo
       password : howoo
+  flask:
+#    host: flask
+    host: 127.0.0.1
+    port: 5000
 
   redis:
+#    host: redis
     host: 127.0.0.1
     port: 6379
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 
-            client-secret:
 
