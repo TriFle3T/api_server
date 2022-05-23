@@ -36,7 +36,6 @@ public class DiaryService {
     private final UserRepository userRepository;
     private final CustomResponse customResponse;
     private final QuoteRepository quoteRepository;
-    private final Random random;
 
     @Value("${spring.flask.host}")
     private String host;
@@ -82,7 +81,7 @@ public class DiaryService {
         var quotes = quoteRepository.findByIndex(result.getIndex());
 
         int size = quotes.getQuotes().size();
-        int randomIndex = random.nextInt(size);
+        int randomIndex = new Random().nextInt(size);
 
         var quote = quotes.getQuotes().get(
             randomIndex
