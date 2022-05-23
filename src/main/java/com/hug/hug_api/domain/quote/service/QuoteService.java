@@ -23,19 +23,19 @@ public class QuoteService {
 
     private final QuoteRepository quoteRepository;
 
-    private final static List<String> EMOTIONS = List.of("행복","분노","혐오","두려움","슬픔");
+    private final static List<String> EMOTIONS = List.of("행복","분노","혐오","두려움","중립","슬픔","놀람");
 
     public void insertFile(){
         ClassPathResource resource = new ClassPathResource("quote_DB");
 
         List<Quote> quotes = new ArrayList<>();
 
-        for(int i =0;i<5;i++){
+        for(int i =0;i<7;i++){
             quotes.add(
                     Quote.builder()
                             .quotes(new ArrayList<>())
                             .theme(EMOTIONS.get(i))
-                            .index(i+1)
+                            .index(i)
                             .build()
             );
         }
@@ -56,7 +56,7 @@ public class QuoteService {
             content.forEach(
                     q->{
                         var items = q.split("\t");
-                        var quote = quotes.get(Integer.parseInt(items[0])-1);
+                        var quote = quotes.get(Integer.parseInt(items[0]));
                         quote.getQuotes().add(
                                 SingleQuoteDto.builder()
                                         .content(items[1])
