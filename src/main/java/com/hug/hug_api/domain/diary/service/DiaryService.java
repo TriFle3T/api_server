@@ -8,6 +8,8 @@ import com.hug.hug_api.global.common.CustomResponse;
 import com.hug.hug_api.global.exception.CustomException;
 import com.hug.hug_api.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +24,10 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
@@ -33,11 +37,19 @@ public class DiaryService {
     private final CustomResponse customResponse;
     private final QuoteRepository quoteRepository;
 
+    @Value("${spring.flask.host}")
+    private String host;
+
+    @Value("${spring.flask.port}")
+    private int port;
+
 
     public ResponseEntity<?> analyzeDiary(DiaryDto diaryDto) {
 
+        String url = "http://"+host+":"+ port + "/analyze";
+
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:5000/analyze")
+                .fromUriString(url)
                 .build()
                 .encode().toUri();
 
@@ -56,7 +68,6 @@ public class DiaryService {
                 uri, HttpMethod.POST,entity,responseType
         );
 
-
         String email = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var optionalUser = userRepository.findByEmail(email);
 
@@ -68,8 +79,9 @@ public class DiaryService {
         if(result == null) throw new CustomException(ErrorCode.ML_SERVER_ERROR);
 
         var quotes = quoteRepository.findByIndex(result.getIndex());
+
         int size = quotes.getQuotes().size();
-        int randomIndex = (int)(Math.random()* size);
+        int randomIndex = new Random().nextInt(size);
 
         var quote = quotes.getQuotes().get(
             randomIndex
@@ -78,19 +90,16 @@ public class DiaryService {
         result.setContent(quote.getContent());
         result.setSpeaker(quote.getSpeaker());
 
-
-        if(diaryDto.getResult()==null) diaryDto.setResult(List.of(result));
-        else diaryDto.getResult().add(result);
+        diaryDto.setResult(List.of(result));
 
         diaryDto.setEmoji(result.getIndex());
 
         int idx = user.getCounter()+1;
+
         diaryDto.setIndex(idx);
         user.setCounter(idx);
 
         diaryDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
-
-
 
         if(user.getDiaries() == null) user.setDiaries(List.of(diaryDto));
         else user.getDiaries().add(diaryDto);
@@ -119,7 +128,6 @@ public class DiaryService {
         user.setDiaries(deleted);
 
         userRepository.save(user);
-
 
         return customResponse.success("삭제 성공");
 

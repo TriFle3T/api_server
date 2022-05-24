@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.net.UnknownHostException;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,6 +20,7 @@ public class GlobalExceptionHandler {
         log.warn("{}", ex.getMessage());
         return ErrorResponse.toResponseEntity(ex);
     }
+
     @ExceptionHandler(value = {HttpClientErrorException.BadRequest.class, HttpMessageNotReadableException.class})
     protected ResponseEntity<ErrorResponse> handleBadException(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.INVALID_ACCESS).build();
@@ -25,6 +28,15 @@ public class GlobalExceptionHandler {
 
         return ErrorResponse.toResponseEntity(ce);
     }
+
+    @ExceptionHandler(value = UnknownHostException.class)
+    protected ResponseEntity<ErrorResponse> handleUnKnownHostException(Exception ex){
+        var ce = CustomException.builder().errorCode(ErrorCode.SERVER_ERROR).build();
+        log.warn("{}", ex.getMessage());
+
+        return ErrorResponse.toResponseEntity(ce);
+    }
+
 
 
     @ExceptionHandler(value = {BadCredentialsException.class})
@@ -39,7 +51,6 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleInternalServerError(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.SERVER_ERROR).build();
         log.warn("{}", ex.getMessage());
-
         return ErrorResponse.toResponseEntity(ce);
     }
 

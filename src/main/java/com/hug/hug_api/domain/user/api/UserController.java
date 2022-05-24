@@ -4,8 +4,6 @@ import com.hug.hug_api.domain.diary.dto.DiaryDto;
 import com.hug.hug_api.domain.diary.service.DiaryService;
 import com.hug.hug_api.domain.quote.service.QuoteService;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
-import com.hug.hug_api.domain.user.dto.SignUpDto;
-import com.hug.hug_api.domain.user.dto.UserDto;
 import com.hug.hug_api.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +17,6 @@ public class UserController {
     private final UserService userService;
     private final DiaryService diaryService;
     private final QuoteService quoteService;
-
-    @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto){
-        return userService.signUp(signUpDto);
-    }
 
     
     @PostMapping("/sign-in")
@@ -42,6 +35,11 @@ public class UserController {
         return diaryService.deleteDiary(index);
     }
 
+
+    @GetMapping("/greeting")
+    public String greeting(){
+        return "hihi!!!!";
+    }
 
     @GetMapping("/insert")
     public String insertDB(){
