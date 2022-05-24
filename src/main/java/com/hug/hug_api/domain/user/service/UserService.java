@@ -7,6 +7,7 @@ import com.hug.hug_api.domain.user.dao.UserRepository;
 import com.hug.hug_api.domain.user.domain.User;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.dto.SignInResponseDto;
+import com.hug.hug_api.domain.user.dto.SignOutRequestDto;
 import com.hug.hug_api.global.common.CustomResponse;
 import com.hug.hug_api.global.exception.CustomException;
 import com.hug.hug_api.global.exception.ErrorCode;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -149,5 +151,25 @@ public class UserService implements UserDetailsService {
                 .quotes(quotes)
                 .result(ret)
                 .build();
+    }
+
+    public ResponseEntity<?> signOut(String email, SignOutRequestDto signOutRequestDto) {
+
+        var accessTokenInfo = JwtTokenProvider.verify(signOutRequestDto.getToken());
+
+        String isLogout = redisTemplate.opsForValue().get(signOutRequestDto.getToken());
+
+        if(accessTokenInfo.isSuccess() || !ObjectUtils.isEmpty(isLogout)) throw new CustomException(ErrorCode.INVALID_ACCESS);
+
+        // redis에서 refreshToken 지우기
+        if(redisTemplate.opsForValue().get(email)!=null){
+            redisTemplate.delete(email);
+        }
+
+        // redis black list에 추가
+        redisTemplate.opsForValue()
+                .set(signOutRequestDto.getToken(), "logout", JwtTokenProvider.ACCESS_TIME, TimeUnit.SECONDS);
+
+        return customResponse.success("로그아웃 성공");
     }
 }
