@@ -1,9 +1,6 @@
 package com.hug.hug_api.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hug.hug_api.global.exception.CustomException;
-import com.hug.hug_api.global.exception.ErrorCode;
-import com.hug.hug_api.global.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -13,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 
 @Component
