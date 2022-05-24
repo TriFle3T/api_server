@@ -1,6 +1,7 @@
 package com.hug.hug_api.global.config;
 
 import com.hug.hug_api.domain.user.service.UserService;
+import com.hug.hug_api.global.jwt.JwtAccessDeniedHandler;
 import com.hug.hug_api.global.jwt.JwtAuthenticationEntryPoint;
 import com.hug.hug_api.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final RedisTemplate<String,String> redisTemplate;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
 
     @Override
@@ -37,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
                 ;
     }
 }

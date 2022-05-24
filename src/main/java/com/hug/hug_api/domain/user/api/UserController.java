@@ -7,6 +7,7 @@ import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,14 +26,24 @@ public class UserController {
     }
 
 
-    @PostMapping("/user/diary")
-    public ResponseEntity<?> analyzeDiary(@RequestBody DiaryDto diaryDto){
-        return diaryService.analyzeDiary(diaryDto);
+    @PostMapping("/user/{email}/diary")
+    @PreAuthorize("#email == authentication.principal")
+    public ResponseEntity<?> analyzeDiary(@RequestBody DiaryDto diaryDto,
+                                          @PathVariable(name="email")String email){
+        return diaryService.analyzeDiary(diaryDto,email);
     }
 
-    @DeleteMapping("/user/diary/{index}")
-    public ResponseEntity<?> deleteDiary(@PathVariable(name = "index") int index){
-        return diaryService.deleteDiary(index);
+    @DeleteMapping("/user/{email}/diary/{index}")
+    @PreAuthorize("#email == authentication.principal")
+    public ResponseEntity<?> deleteDiary(@PathVariable(name = "index") int index,
+                                        @PathVariable(name="email")String email){
+        return diaryService.deleteDiary(index,email);
+    }
+
+    @GetMapping("/user/{email}")
+    @PreAuthorize("#email == authentication.principal")
+    public ResponseEntity<?> getUser(@PathVariable(name="email")String email){
+        return userService.getUser(email);
     }
 
 

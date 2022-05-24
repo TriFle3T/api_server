@@ -1,6 +1,7 @@
 package com.hug.hug_api.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hug.hug_api.global.common.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -18,19 +19,20 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException{
-//        throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
 
             response.setContentType("application/json;charset=utf-8");
             var map = new HashMap<String,Object>();
 
+            map.put("data",null);
             map.put("message","인증 에러");
-            map.put("status",401);
-            map.put("code", "AUTH_ERROR");
-            map.put("error",HttpStatus.UNAUTHORIZED.name());
+            map.put("error", ErrorResponse.builder()
+                            .error(HttpStatus.UNAUTHORIZED.name())
+                            .code("AUTH_ERROR")
+                    .build());
+            map.put("result","fail");
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(objectMapper.writeValueAsString(map));
-
 
         }
 
