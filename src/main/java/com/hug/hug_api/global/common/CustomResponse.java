@@ -1,5 +1,7 @@
 package com.hug.hug_api.global.common;
 
+import com.hug.hug_api.global.exception.CustomException;
+import com.hug.hug_api.global.exception.ErrorCode;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,25 @@ public class CustomResponse {
                 .data(data)
                 .message(message)
                 .result("success")
-                .error(Collections.emptyList())
+                .error(null)
                 .build();
         return ResponseEntity.status(status).body(body);
+    }
+
+    public ResponseEntity<?> fail(CustomException e){
+        ErrorCode errorCode = e.getErrorCode();
+
+        Body body = Body.builder()
+                .data(null)
+                .message(errorCode.getDetail())
+                .result("fail")
+                .error(ErrorResponse.builder()
+                        .error(errorCode.getHttpStatus().name())
+                        .code(errorCode.name())
+                        .build())
+                .build();
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(body);
+
     }
 
     // message만 있는 성공 응답
@@ -40,7 +58,5 @@ public class CustomResponse {
     public ResponseEntity<?>success(Object data,String message){
         return success(data,message,HttpStatus.OK);
     }
-    public ResponseEntity<?>success(String message,HttpStatus status){
-        return success(Collections.emptyList(),message,status);
-    }
+
 }

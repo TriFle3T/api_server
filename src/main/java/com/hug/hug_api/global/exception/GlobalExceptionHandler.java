@@ -1,9 +1,12 @@
 package com.hug.hug_api.global.exception;
 
+import com.hug.hug_api.global.common.CustomResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
@@ -12,46 +15,48 @@ import org.springframework.web.client.HttpServerErrorException;
 import java.net.UnknownHostException;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final CustomResponse response;
+
     @ExceptionHandler(value = {CustomException.class})
-    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
+    protected ResponseEntity<?> handleCustomException(CustomException ex) {
         log.warn("{}", ex.getMessage());
-        return ErrorResponse.toResponseEntity(ex);
+        return response.fail(ex);
     }
 
-    @ExceptionHandler(value = {HttpClientErrorException.BadRequest.class, HttpMessageNotReadableException.class})
-    protected ResponseEntity<ErrorResponse> handleBadException(Exception ex){
+    @ExceptionHandler(value = {HttpClientErrorException.BadRequest.class, HttpMessageNotReadableException.class,
+            HttpRequestMethodNotSupportedException.class})
+    protected ResponseEntity<?> handleBadException(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.INVALID_ACCESS).build();
         log.warn("{}", ex.getMessage());
-
-        return ErrorResponse.toResponseEntity(ce);
+        return response.fail(ce);
     }
 
     @ExceptionHandler(value = UnknownHostException.class)
-    protected ResponseEntity<ErrorResponse> handleUnKnownHostException(Exception ex){
+    protected ResponseEntity<?> handleUnKnownHostException(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.SERVER_ERROR).build();
         log.warn("{}", ex.getMessage());
-
-        return ErrorResponse.toResponseEntity(ce);
+        return response.fail(ce);
     }
 
 
 
     @ExceptionHandler(value = {BadCredentialsException.class})
-    protected ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex){
+    protected ResponseEntity<?> handleAuthenticationException(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.INVALID_AUTH).build();
         log.warn("{}", ex.getMessage());
-        return ErrorResponse.toResponseEntity(ce);
+        return response.fail(ce);
     }
 
 
     @ExceptionHandler(value = {HttpServerErrorException.InternalServerError.class})
-    protected ResponseEntity<ErrorResponse> handleInternalServerError(Exception ex){
+    protected ResponseEntity<?> handleInternalServerError(Exception ex){
         var ce = CustomException.builder().errorCode(ErrorCode.SERVER_ERROR).build();
         log.warn("{}", ex.getMessage());
-        return ErrorResponse.toResponseEntity(ce);
+        return response.fail(ce);
     }
 
 }

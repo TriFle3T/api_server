@@ -2,7 +2,7 @@ package com.hug.hug_api.domain.diary.service;
 
 import com.hug.hug_api.domain.diary.dto.DiaryDto;
 import com.hug.hug_api.domain.quote.dao.QuoteRepository;
-import com.hug.hug_api.domain.result.TestResult;
+import com.hug.hug_api.domain.result.dto.TestResultDto;
 import com.hug.hug_api.domain.user.dao.UserRepository;
 import com.hug.hug_api.global.common.CustomResponse;
 import com.hug.hug_api.global.exception.CustomException;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,7 +43,7 @@ public class DiaryService {
     private int port;
 
 
-    public ResponseEntity<?> analyzeDiary(DiaryDto diaryDto) {
+    public ResponseEntity<?> analyzeDiary(DiaryDto diaryDto,String email) {
 
         String url = "http://"+host+":"+ port + "/analyze";
 
@@ -62,23 +61,22 @@ public class DiaryService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
-        var responseType = new ParameterizedTypeReference<TestResult>(){};
+        var responseType = new ParameterizedTypeReference<TestResultDto>(){};
 
         var responseEntity = new RestTemplate().exchange(
                 uri, HttpMethod.POST,entity,responseType
         );
 
-        String email = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var optionalUser = userRepository.findByEmail(email);
 
         if(optionalUser.isEmpty()) throw new CustomException(ErrorCode.USER_NOT_FOUND);
 
         var user = optionalUser.get();
 
-        TestResult result = responseEntity.getBody();
+        TestResultDto result = responseEntity.getBody();
         if(result == null) throw new CustomException(ErrorCode.ML_SERVER_ERROR);
 
-        var quotes = quoteRepository.findByIndex(result.getIndex());
+        var quotes = quoteRepository.findByIndex(result.getQuoteIndex());
 
         int size = quotes.getQuotes().size();
         int randomIndex = new Random().nextInt(size);
@@ -92,7 +90,7 @@ public class DiaryService {
 
         diaryDto.setResult(List.of(result));
 
-        diaryDto.setEmoji(result.getIndex());
+        diaryDto.setEmoji(result.getResultIndex());
 
         int idx = user.getCounter()+1;
 
@@ -112,9 +110,7 @@ public class DiaryService {
 
     }
 
-    public ResponseEntity<?> deleteDiary(int index) {
-
-        String email = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<?> deleteDiary(int index,String email) {
 
         var optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isEmpty()) throw new CustomException(ErrorCode.USER_NOT_FOUND);

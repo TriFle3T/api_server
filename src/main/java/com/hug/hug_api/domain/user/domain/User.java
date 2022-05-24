@@ -1,7 +1,6 @@
 package com.hug.hug_api.domain.user.domain;
 
 import com.hug.hug_api.domain.diary.dto.DiaryDto;
-import com.hug.hug_api.domain.result.MainScreenResult;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -25,14 +24,12 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String email;
 
-    private int counter = 0;
+    private int counter;
 
     private String name;
     private String password;
 
     private List<DiaryDto> diaries;
-
-    private List<MainScreenResult> result;
 
     private Set<GrantedAuthority> authorities;
 
