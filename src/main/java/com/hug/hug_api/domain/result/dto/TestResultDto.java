@@ -1,4 +1,4 @@
-package com.hug.hug_api.domain.result;
+package com.hug.hug_api.domain.result.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Setter
-public class TestResult {
+public class TestResultDto {
     private Float happy;
     private Float angry;
     private Float disgust;
@@ -19,7 +19,8 @@ public class TestResult {
     private Float sad;
     private Float neutral;
     private Float surprise;
-    private int index;
+    private int resultIndex;
+    private int quoteIndex;
     private String content;
     private String speaker;
 }
