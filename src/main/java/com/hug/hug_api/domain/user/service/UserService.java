@@ -159,7 +159,7 @@ public class UserService implements UserDetailsService {
 
         String isLogout = redisTemplate.opsForValue().get(signOutRequestDto.getToken());
 
-        if(accessTokenInfo.isSuccess() || !ObjectUtils.isEmpty(isLogout)) throw new CustomException(ErrorCode.INVALID_ACCESS);
+        if(!accessTokenInfo.isSuccess() || !ObjectUtils.isEmpty(isLogout)) throw new CustomException(ErrorCode.INVALID_ACCESS);
 
         // redis에서 refreshToken 지우기
         if(redisTemplate.opsForValue().get(email)!=null){
