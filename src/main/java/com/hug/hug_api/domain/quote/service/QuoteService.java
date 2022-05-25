@@ -23,14 +23,14 @@ public class QuoteService {
 
     private final QuoteRepository quoteRepository;
 
-    private final static List<String> EMOTIONS = List.of("행복","분노","혐오","두려움","중립","슬픔","놀람");
+    private final static List<String> EMOTIONS = List.of("행복","분노","혐오","두려움","중립","슬픔");
 
     public void insertFile(){
         ClassPathResource resource = new ClassPathResource("quote_DB");
 
         List<Quote> quotes = new ArrayList<>();
 
-        for(int i =0;i<7;i++){
+        for(int i =0;i<6;i++){
             quotes.add(
                     Quote.builder()
                             .quotes(new ArrayList<>())

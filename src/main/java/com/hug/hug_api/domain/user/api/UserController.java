@@ -4,6 +4,7 @@ import com.hug.hug_api.domain.diary.dto.DiaryDto;
 import com.hug.hug_api.domain.diary.service.DiaryService;
 import com.hug.hug_api.domain.quote.service.QuoteService;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
+import com.hug.hug_api.domain.user.dto.SignOutRequestDto;
 import com.hug.hug_api.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,13 @@ public class UserController {
     @PreAuthorize("#email == authentication.principal")
     public ResponseEntity<?> getUser(@PathVariable(name="email")String email){
         return userService.getUser(email);
+    }
+
+    @PostMapping("/user/{email}/sign-out")
+    @PreAuthorize("#email == authentication.principal")
+    public ResponseEntity<?> signOut(@PathVariable(name="email")String email,
+                                     @RequestBody SignOutRequestDto signOutRequestDto){
+        return userService.signOut(email,signOutRequestDto);
     }
 
 
