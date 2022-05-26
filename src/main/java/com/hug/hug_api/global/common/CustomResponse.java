@@ -52,7 +52,7 @@ public class CustomResponse {
 
     // message만 있는 성공 응답
     public ResponseEntity<?> success(String message){
-        return success(Collections.emptyList(),message,HttpStatus.OK);
+        return success(null,message,HttpStatus.OK);
     }
 
     public ResponseEntity<?>success(Object data,String message){
