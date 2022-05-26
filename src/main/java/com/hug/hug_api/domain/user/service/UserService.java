@@ -169,7 +169,9 @@ public class UserService implements UserDetailsService {
         // redis black list에 추가
         redisTemplate.opsForValue()
                 .set(signOutRequestDto.getToken(), "logout", JwtTokenProvider.ACCESS_TIME, TimeUnit.SECONDS);
+        
         log.info("LOGOUT {}",email);
+
         return customResponse.success("로그아웃 성공");
     }
 }

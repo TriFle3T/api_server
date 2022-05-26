@@ -41,7 +41,6 @@ public class UserController {
     }
 
 
-
     @DeleteMapping("/user/{email}/diary/{index}")
     @PreAuthorize("#email == authentication.principal")
     public ResponseEntity<?> deleteDiary(@PathVariable(name = "index") int index,
