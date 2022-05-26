@@ -34,6 +34,14 @@ public class UserController {
         return diaryService.analyzeDiary(diaryDto,email);
     }
 
+    @GetMapping("/user/{email}/diary")
+    @PreAuthorize("#email == authentication.principal")
+    public ResponseEntity<?> getDiaries(@PathVariable(name="email")String email){
+        return diaryService.getDiaries(email);
+    }
+
+
+
     @DeleteMapping("/user/{email}/diary/{index}")
     @PreAuthorize("#email == authentication.principal")
     public ResponseEntity<?> deleteDiary(@PathVariable(name = "index") int index,
@@ -53,6 +61,7 @@ public class UserController {
                                      @RequestBody SignOutRequestDto signOutRequestDto){
         return userService.signOut(email,signOutRequestDto);
     }
+
 
 
     @GetMapping("/greeting")
