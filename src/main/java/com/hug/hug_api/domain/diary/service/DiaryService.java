@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
@@ -55,7 +54,7 @@ public class DiaryService {
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("title", diaryDto.getTitle());
         body.add("content", diaryDto.getContent());
 
@@ -127,5 +126,15 @@ public class DiaryService {
 
         return customResponse.success("삭제 성공");
 
+    }
+
+    public ResponseEntity<?> getDiaries(String email) {
+
+        var optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isEmpty()) throw new CustomException(ErrorCode.USER_NOT_FOUND);
+
+        var user = optionalUser.get();
+
+        return customResponse.success(user.getDiaries(),"조회 성공");
     }
 }
