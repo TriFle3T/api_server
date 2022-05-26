@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
                     .build();
 
             userRepository.save(newUser);
-            log.info("new use created!! {} ",signInDto.getEmail());
+            log.info("NEW USER CREATED {} ",signInDto.getEmail());
         }
 
         var user = userRepository.findByEmail(signInDto.getEmail()).get();
@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
         redisTemplate.opsForValue()
                 .set(user.getEmail(), token,JwtTokenProvider.ACCESS_TIME
                         , TimeUnit.SECONDS);
-        log.info("new token created!! {} ",token);
+        log.info("NEW TOKEN CREATED {}",token);
 
         return customResponse.success(responseDto,"로그인 성공");
     }
@@ -169,7 +169,7 @@ public class UserService implements UserDetailsService {
         // redis black list에 추가
         redisTemplate.opsForValue()
                 .set(signOutRequestDto.getToken(), "logout", JwtTokenProvider.ACCESS_TIME, TimeUnit.SECONDS);
-
+        log.info("LOGOUT {}",email);
         return customResponse.success("로그아웃 성공");
     }
 }
