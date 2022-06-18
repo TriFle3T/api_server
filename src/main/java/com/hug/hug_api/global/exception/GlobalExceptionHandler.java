@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +27,15 @@ public class GlobalExceptionHandler {
         log.warn("{}", ex.getMessage());
         return response.fail(ex);
     }
+
+
+    @ExceptionHandler(value = {UsernameNotFoundException.class})
+    protected ResponseEntity<?> handleUsernameNotFoundException(Exception ex){
+        var ce = CustomException.builder().errorCode(ErrorCode.USER_NOT_FOUND).build();
+        log.warn("{}", ex.getMessage());
+        return response.fail(ce);
+    }
+
 
     @ExceptionHandler(value = {HttpClientErrorException.BadRequest.class, HttpMessageNotReadableException.class,
             HttpRequestMethodNotSupportedException.class})

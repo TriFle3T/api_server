@@ -87,7 +87,7 @@ public class DiaryService {
         result.setContent(quote.getContent());
         result.setSpeaker(quote.getSpeaker());
 
-        diaryDto.setResult(List.of(result));
+        diaryDto.setResult(result);
 
         diaryDto.setEmoji(result.getResultIndex());
 

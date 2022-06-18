@@ -44,8 +44,10 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+        var optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isEmpty()) throw new UsernameNotFoundException(email);
+
+        return optionalUser.get();
     }
 
     public ResponseEntity<?> signIn(SignInRequestDto signInDto) {
@@ -100,12 +102,11 @@ public class UserService implements UserDetailsService {
 
     private MainScreenResultDto getMainScreenResult(List<DiaryDto> diaries) {
         // 일단 1일 기준으로 함
-        var criteria = LocalDateTime.now().minusDays(2);
+        var criteria = LocalDateTime.now().minusDays(30);
 
         var filtered = diaries.stream().filter(
                 d->{
                     String[] date = d.getCreatedAt().split("-");
-
                     LocalDateTime cmp = LocalDateTime.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]),0,0);
                     return cmp.isAfter(criteria);
                 }
@@ -127,7 +128,7 @@ public class UserService implements UserDetailsService {
         var total = filtered.size();
 
         for(int i =0; i< 7;i++){
-            result.put(i,(result.get(i)/total)*100);
+            result.put(i,result.get(i));
         }
 
         List<Integer> listKeySet = new ArrayList<>(result.keySet());
@@ -137,10 +138,14 @@ public class UserService implements UserDetailsService {
 
         var ret = new HashMap<Integer,Float>();
         Integer key;
+        Float sum=0f;
+
         for(int i=0;i<4;i++){
             key = listKeySet.get(i);
-            ret.put(key,result.get(key));
+            sum += result.get(key);
+            ret.put(key,(result.get(key))/total*100);
         }
+        ret.put(7,(total-sum)/total*100);
 
         var emoji = listKeySet.get(0);
         var quotes = quoteRepository.findByIndex(emoji)
@@ -169,7 +174,7 @@ public class UserService implements UserDetailsService {
         // redis black list에 추가
         redisTemplate.opsForValue()
                 .set(signOutRequestDto.getToken(), "logout", JwtTokenProvider.ACCESS_TIME, TimeUnit.SECONDS);
-        
+
         log.info("LOGOUT {}",email);
 
         return customResponse.success("로그아웃 성공");
