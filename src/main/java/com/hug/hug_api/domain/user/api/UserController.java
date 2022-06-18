@@ -6,21 +6,23 @@ import com.hug.hug_api.domain.quote.service.QuoteService;
 import com.hug.hug_api.domain.user.dto.SignInRequestDto;
 import com.hug.hug_api.domain.user.dto.SignOutRequestDto;
 import com.hug.hug_api.domain.user.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Api( tags = "User")
 public class UserController {
 
     private final UserService userService;
     private final DiaryService diaryService;
     private final QuoteService quoteService;
 
-    
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto signInDto){
         return userService.signIn(signInDto);
@@ -60,8 +62,6 @@ public class UserController {
                                      @RequestBody SignOutRequestDto signOutRequestDto){
         return userService.signOut(email,signOutRequestDto);
     }
-
-
 
     @GetMapping("/greeting")
     public String greeting(){
