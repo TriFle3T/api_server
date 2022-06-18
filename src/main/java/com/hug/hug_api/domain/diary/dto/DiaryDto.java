@@ -15,7 +15,7 @@ public class DiaryDto {
     private int index;
     private String title;
     private String content;
-    private List<TestResultDto> result;
+    private TestResultDto result;
     private int emoji;
 
     private String createdAt;
