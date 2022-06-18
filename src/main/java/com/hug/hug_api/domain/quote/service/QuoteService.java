@@ -68,6 +68,7 @@ public class QuoteService {
             quoteRepository.saveAll(quotes);
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("격언 DB migrate하는 과정 중 알 수 없는 exception 발생!!!!");
         }
     }
